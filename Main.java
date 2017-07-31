@@ -14,7 +14,9 @@ public class Main {
     public static JFrame frame;
     public static JPanel gui;
     public static JTextField a;
+    public static JTextField b;
     public static String currentInput = "";
+    public static String historyInput = "";
     public static String firstNumber = "";
     public static String operationInProgress;
 
@@ -66,6 +68,8 @@ public class Main {
             gui.grabFocus();
 
             currentInput = "";
+            historyInput += currentInput;
+            b.setText("");
             }
         });
         content.add(c);
@@ -106,13 +110,22 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 if(currentInput.equals("")){
                     Long x = Long.valueOf(firstNumber);
+                    historyInput = "";
+                    historyInput += firstNumber + "*" + firstNumber;
+                    b.setText(historyInput);
+
                     firstNumber = ("" + x*x);
                     a.setText(""+x*x);
                 }else{
                     Long x = Long.valueOf(currentInput);
+                    historyInput = "";
+                    historyInput += currentInput + "*" + currentInput;
+                    b.setText(historyInput);
+
                     currentInput = ("" + x*x);
                     checkingFont();
                     a.setText(""+x*x);
+
                 }
                 gui.grabFocus();
             }
@@ -158,16 +171,27 @@ public class Main {
                 float additionalOne = 1/temporary;
                 System.out.println("1." + temporary);
                 if(temporary == Math.floor(temporary) && additionalOne == Math.floor(additionalOne) ){
+                    historyInput = "";
+                    historyInput += "1/" + currentInput;
+                    b.setText(historyInput);
+
                     Integer x = Integer.valueOf(currentInput);
                     float result = (float)1/(float)x;
                     currentInput = "" +result;
                     a.setText(result+"");
                 }else if(additionalOne == Math.floor(additionalOne)){
+                    historyInput = "";
+                    historyInput += "1/" + currentInput;
+                    b.setText(historyInput);
+
                     int b = Math.round(additionalOne);
                     currentInput = "" +b;
                     a.setText("" +b);
                 }
                 else{
+                    historyInput = "";
+                    historyInput += "1/" + currentInput;
+                    b.setText(historyInput);
 
                     temporary = 1/temporary;
                     System.out.println("2." + temporary);
@@ -214,8 +238,20 @@ public class Main {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                firstNumber = currentInput;
+                if(currentInput.equals("")){
+
+                }else{
+                    firstNumber = currentInput;
+                }
+
                 operationInProgress = "division";
+
+                if(currentInput.equals("")){
+                    historyInput = resetOperations("/");
+                }else{
+                    historyInput = currentInput + "/";
+                }
+                b.setText(historyInput);
                 currentInput = "";
                 gui.grabFocus();
             }
@@ -382,9 +418,19 @@ public class Main {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                firstNumber = currentInput;
-                currentInput = "";
+                if(currentInput.equals("")){
+
+                }else{
+                    firstNumber = currentInput;
+                }
                 operationInProgress = "multiplication";
+                if(currentInput.equals("")){
+                    historyInput = resetOperations("*");
+                }else{
+                    historyInput = currentInput + "*";
+                }
+                b.setText(historyInput);
+                currentInput = "";
                 gui.grabFocus();
             }
         });
@@ -548,9 +594,19 @@ public class Main {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                firstNumber = currentInput;
-                currentInput = "";
+                if(currentInput.equals("")){
+
+                }else{
+                    firstNumber = currentInput;
+                }
                 operationInProgress = "subtraction";
+                if(currentInput.equals("")){
+                    historyInput = resetOperations("-");
+                }else{
+                    historyInput = currentInput + "-";
+                }
+                b.setText(historyInput);
+                currentInput = "";
                 gui.grabFocus();
             }
         });
@@ -716,9 +772,19 @@ public class Main {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                firstNumber = currentInput;
-                currentInput = "";
+                if(currentInput.equals("")){
+
+                }else{
+                    firstNumber = currentInput;
+                }
                 operationInProgress = "addition";
+                if(currentInput.equals("")){
+                    historyInput = resetOperations("+");
+                }else{
+                    historyInput = currentInput + "+";
+                }
+                b.setText(historyInput);
+                currentInput = "";
                 gui.grabFocus();
             }
         });
@@ -759,11 +825,21 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if ( currentInput.indexOf("-") >= 0){
-                    currentInput = currentInput.replace("-", "");
-                    a.setText(currentInput);
+                    if (currentInput.equals("0") ){
+
+                    }else{
+                        currentInput = currentInput.replace("-", "");
+                        a.setText(currentInput);
+                    }
+
                 }else{
-                    currentInput = "-" + currentInput;
-                    a.setText(currentInput);
+                    if (currentInput.equals("0") ){
+
+                    }else{
+                        currentInput = "-" + currentInput;
+                        a.setText(currentInput);
+                    }
+
                 }
                 gui.grabFocus();
             }
@@ -848,8 +924,14 @@ public class Main {
                 if(currentInput.indexOf(".")>= 0){
 
                 }else{
-                    currentInput = currentInput + ".";
-                    a.setText(currentInput);
+                    if (currentInput.equals("")){
+                        currentInput = 0 + ".";
+                        a.setText(currentInput);
+                    }else{
+                        currentInput = currentInput + ".";
+                        a.setText(currentInput);
+                    }
+
                 }
                 gui.grabFocus();
             }
@@ -891,98 +973,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                float temporary;
-                float firstFloatNum = Float.valueOf(firstNumber);
-                float secondFloatNum = Float.valueOf(currentInput);
-                int falseFloat;
-                switch (operationInProgress){
-                    case "addition":
-                        temporary = (firstFloatNum +secondFloatNum);
-                        if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
-                                && secondFloatNum == Math.floor(secondFloatNum)) {
-                            Integer firstNum = Integer.valueOf(firstNumber);
-                            Integer secondNum = Integer.valueOf(currentInput);
-                            firstNumber = "" + (firstNum+secondNum);
-                            a.setText(firstNumber);
-                            currentInput = firstNumber;
-                        }else if(temporary == Math.floor(temporary)) {
-
-                            falseFloat = Math.round(temporary);
-                            a.setText(""+falseFloat);
-                            currentInput = "" + falseFloat;
-
-                        }else{
-                            a.setText("" + temporary);
-                            currentInput = "" + temporary;
-
-                        }
-                        break;
-                    case "subtraction":
-                        temporary = (firstFloatNum -secondFloatNum);
-                        if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
-                                && secondFloatNum == Math.floor(secondFloatNum)) {
-                            Integer firstNum = Integer.valueOf(firstNumber);
-                            Integer secondNum = Integer.valueOf(currentInput);
-                            firstNumber = "" + (firstNum-secondNum);
-                            a.setText(firstNumber);
-                            currentInput = firstNumber;
-                        }else if(temporary == Math.floor(temporary)) {
-
-                            falseFloat = Math.round(temporary);
-                            a.setText(""+falseFloat);
-                            currentInput = "" + falseFloat;
-
-                        }else{
-                            a.setText("" + temporary);
-                            currentInput = "" + temporary;
-
-                        }
-                        break;
-                    case "multiplication":
-                        temporary = (firstFloatNum *secondFloatNum);
-                        if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
-                                && secondFloatNum == Math.floor(secondFloatNum)) {
-                            Integer firstNum = Integer.valueOf(firstNumber);
-                            Integer secondNum = Integer.valueOf(currentInput);
-                            firstNumber = "" + (firstNum*secondNum);
-                            a.setText(firstNumber);
-                            currentInput = firstNumber;
-                        }else if(temporary == Math.floor(temporary)) {
-
-                            falseFloat = Math.round(temporary);
-                            a.setText(""+falseFloat);
-                            currentInput = "" + falseFloat;
-
-                        }else{
-                            a.setText("" + temporary);
-                            currentInput = "" + temporary;
-
-                        }
-                        break;
-
-                    case "division":
-                        temporary = (firstFloatNum / secondFloatNum);
-                        if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
-                                && secondFloatNum == Math.floor(secondFloatNum)) {
-                            Integer firstNum = Integer.valueOf(firstNumber);
-                            Integer secondNum = Integer.valueOf(currentInput);
-                            firstNumber = "" + (firstNum/secondNum);
-                            a.setText(firstNumber);
-                            currentInput = firstNumber;
-                        }else if(temporary == Math.floor(temporary)) {
-
-                            falseFloat = Math.round(temporary);
-                            a.setText(""+falseFloat);
-                            currentInput = "" + falseFloat;
-
-                        }else{
-                            a.setText("" + temporary);
-                            currentInput = "" + temporary;
-
-                        }
-                        break;
-                }
-                gui.grabFocus();
+                getResult();
             }
         });
         content.add(equal);
@@ -991,7 +982,18 @@ public class Main {
         gui.add(content, BorderLayout.CENTER);
 
         Container info = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, 50, 5));
+                new FlowLayout(FlowLayout.LEFT, 60, 5));
+        b = new JTextField();
+        b.setHorizontalAlignment(SwingConstants.RIGHT);
+        b.setEditable(false);
+        b.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        b.setPreferredSize(new Dimension(270,50));
+        b.setSelectionColor(Color.RED);
+        b.setSelectedTextColor(Color.RED);
+        b.setCaretColor(Color.RED);
+        b.setForeground(Color.MAGENTA);
+        b.setFont(new Font (Font.SANS_SERIF,Font.BOLD, 32));
+
         a = new JTextField();
         a.setHorizontalAlignment(SwingConstants.RIGHT);
         a.setEditable(false);
@@ -1007,8 +1009,12 @@ public class Main {
 
 
 
-        info.add(a);
-        info.setPreferredSize(new Dimension(gui.getWidth(),65));
+
+
+        info.add(b, BorderLayout.PAGE_START);
+        info.add(a, BorderLayout.LINE_START);
+
+        info.setPreferredSize(new Dimension(gui.getWidth(),110));
 
         gui.add(info, BorderLayout.PAGE_START);
 
@@ -1028,16 +1034,47 @@ public class Main {
                     if(currentInput.contains(".")){
 
                     }else{
-                        currentInput += ".";
-                        a.setText(currentInput);
+                        if (currentInput.equals("")){
+                            currentInput = 0 + ".";
+                            a.setText(currentInput);
+                        }else{
+                            currentInput = currentInput + ".";
+                            a.setText(currentInput);
+                        }
                     }
+                }else if (temp.equals("+")){
+                    firstNumber = currentInput;
+                    currentInput = "";
+                    operationInProgress = "addition";
+                    gui.grabFocus();
+                }else if (temp.equals("-")){
+                    firstNumber = currentInput;
+                    currentInput = "";
+                    operationInProgress = "subtraction";
+                    gui.grabFocus();
+                }else if (temp.equals("*")){
+                    firstNumber = currentInput;
+                    currentInput = "";
+                    operationInProgress = "multiplication";
+                    gui.grabFocus();
+                }else if (temp.equals("/")){
+                    firstNumber = currentInput;
+                    currentInput = "";
+                    operationInProgress = "division";
+                    gui.grabFocus();
+                }else if(temp.equals("=") ){
+                    getResult();
+
                 }
 
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    getResult();
 
+                }
             }
 
             @Override
@@ -1066,5 +1103,180 @@ public class Main {
         }
     }
 
+    public static void getResult(){
+        float temporary;
+        float firstFloatNum = Float.valueOf(firstNumber);
+        float secondFloatNum = Float.valueOf(currentInput);
+        int falseFloat;
+        switch (operationInProgress){
+            case "addition":
+                temporary = (firstFloatNum +secondFloatNum);
+                if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
+                        && secondFloatNum == Math.floor(secondFloatNum)) {
+                    Integer firstNum = Integer.valueOf(firstNumber);
+                    Integer secondNum = Integer.valueOf(currentInput);
+
+                    historyInput = "";
+                    historyInput += firstNumber + "+" + currentInput;
+                    b.setText(historyInput);
+
+                    firstNumber = "" + (firstNum+secondNum);
+                    a.setText(firstNumber);
+                    currentInput = firstNumber;
+                }else if(temporary == Math.floor(temporary)) {
+                    historyInput = "";
+                    historyInput += firstNumber + "+" + currentInput;
+                    b.setText(historyInput);
+
+                    falseFloat = Math.round(temporary);
+                    a.setText(""+falseFloat);
+                    currentInput = "" + falseFloat;
+
+                }else{
+                    historyInput = "";
+                    historyInput += firstNumber + "+" + currentInput;
+                    b.setText(historyInput);
+
+                    a.setText("" + temporary);
+                    currentInput = "" + temporary;
+
+                }
+                break;
+            case "subtraction":
+                temporary = (firstFloatNum -secondFloatNum);
+                if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
+                        && secondFloatNum == Math.floor(secondFloatNum)) {
+                    Integer firstNum = Integer.valueOf(firstNumber);
+                    Integer secondNum = Integer.valueOf(currentInput);
+
+                    historyInput = "";
+                    historyInput += firstNumber + "-" + currentInput;
+                    b.setText(historyInput);
+
+                    firstNumber = "" + (firstNum-secondNum);
+                    a.setText(firstNumber);
+                    currentInput = firstNumber;
+                }else if(temporary == Math.floor(temporary)) {
+                    historyInput = "";
+                    historyInput += firstNumber + "-" + currentInput;
+                    b.setText(historyInput);
+
+                    falseFloat = Math.round(temporary);
+                    a.setText(""+falseFloat);
+                    currentInput = "" + falseFloat;
+
+                }else{
+                    historyInput = "";
+                    historyInput += firstNumber + "-" + currentInput;
+                    b.setText(historyInput);
+
+                    a.setText("" + temporary);
+                    currentInput = "" + temporary;
+
+                }
+                break;
+            case "multiplication":
+                temporary = (firstFloatNum *secondFloatNum);
+                if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
+                        && secondFloatNum == Math.floor(secondFloatNum)) {
+                    Integer firstNum = Integer.valueOf(firstNumber);
+                    Integer secondNum = Integer.valueOf(currentInput);
+
+                    historyInput = "";
+                    historyInput += firstNumber + "*" + currentInput;
+                    b.setText(historyInput);
+
+                    firstNumber = "" + (firstNum*secondNum);
+                    a.setText(firstNumber);
+                    currentInput = firstNumber;
+                }else if(temporary == Math.floor(temporary)) {
+                    historyInput = "";
+                    historyInput += firstNumber + "*" + currentInput;
+                    b.setText(historyInput);
+
+                    falseFloat = Math.round(temporary);
+                    a.setText(""+falseFloat);
+                    currentInput = "" + falseFloat;
+
+                }else{
+                    historyInput = "";
+                    historyInput += firstNumber + "*" + currentInput;
+                    b.setText(historyInput);
+
+                    a.setText("" + temporary);
+                    currentInput = "" + temporary;
+
+                }
+                break;
+
+            case "division":
+                temporary = (firstFloatNum / secondFloatNum);
+                if (secondFloatNum != 0){
+                    if (temporary == Math.floor(temporary) && firstFloatNum == Math.floor(firstFloatNum)
+                            && secondFloatNum == Math.floor(secondFloatNum)) {
+                        Integer firstNum = Integer.valueOf(firstNumber);
+                        Integer secondNum = Integer.valueOf(currentInput);
+
+                        historyInput = "";
+                        historyInput += firstNumber + "/" + currentInput;
+                        b.setText(historyInput);
+
+                        firstNumber = "" + (firstNum/secondNum);
+                        a.setText(firstNumber);
+                        currentInput = firstNumber;
+                    }else if(temporary == Math.floor(temporary)) {
+                        historyInput = "";
+                        historyInput += firstNumber + "/" + currentInput;
+                        b.setText(historyInput);
+
+                        falseFloat = Math.round(temporary);
+                        a.setText(""+falseFloat);
+                        currentInput = "" + falseFloat;
+
+                    }else{
+                        historyInput = "";
+                        historyInput += firstNumber + "/" + currentInput;
+                        b.setText(historyInput);
+
+                        a.setText("" + temporary);
+                        currentInput = "" + temporary;
+
+                    }
+                    break;
+                }else{
+                    historyInput = "";
+                    historyInput += firstNumber + "/" + currentInput;
+                    b.setText(historyInput);
+
+                    a.setText("Error");
+                    currentInput = "";
+                }
+
+        }
+        gui.grabFocus();
+    }
+
+    public static String resetOperations(String operation){
+        if(historyInput.contains("+") || historyInput.contains("-") || historyInput.contains("*")
+                || historyInput.contains("/")){
+
+                if(historyInput.contains("-")){
+                    historyInput = historyInput.replace("-", operation);
+                }else if (historyInput.contains("+")){
+                    historyInput = historyInput.replace("+", operation);
+                }else if (historyInput.contains("/")){
+                    historyInput = historyInput.replace("/", operation);
+                }else if (historyInput.contains("*")){
+                    historyInput = historyInput.replace("*", operation);
+                }
+
+
+
+            return historyInput;
+        }
+        else{
+            return historyInput+operation;
+        }
+    }
 
 }
